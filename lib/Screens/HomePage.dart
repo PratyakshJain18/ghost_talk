@@ -1,7 +1,7 @@
-import 'package:anonymous_chat/report_webview.dart';
+import 'package:anonymous_chat/utils/report_webview.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'Components/topic_card.dart';
+import '../Components/topic_card.dart';
 
 class Homepage extends StatelessWidget {
   const Homepage({super.key});
@@ -11,7 +11,7 @@ class Homepage extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF1F5F9),
 
-      // ================= DRAWER =================
+
       drawer: Drawer(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -61,7 +61,7 @@ class Homepage extends StatelessWidget {
         ),
       ),
 
-      // ================= APP BAR =================
+
       appBar: AppBar(
         centerTitle: true,
         iconTheme: const IconThemeData(

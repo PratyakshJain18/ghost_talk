@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'Controller/chat_controller.dart';
-import '../utils/user_identity.dart';
+import '../Controller/chat_controller.dart';
+import '../../utils/user_identity.dart';
 class ChatScreen extends GetView<ChatController> {
   ChatScreen({super.key }) ;
 

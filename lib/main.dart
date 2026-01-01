@@ -1,9 +1,9 @@
-import 'package:anonymous_chat/HomePage.dart';
+import 'package:anonymous_chat/Screens/HomePage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'Controller/chat_binding.dart';
-import 'chat_screen.dart';
+import 'Screens/chat_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
