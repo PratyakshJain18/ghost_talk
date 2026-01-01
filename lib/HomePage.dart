@@ -16,6 +16,7 @@ class Homepage extends StatelessWidget {
         toolbarHeight: 70,
         title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               "Ghost Talk",
@@ -35,7 +36,10 @@ class Homepage extends StatelessWidget {
           ],
         ),
       ),
-      body: Padding(
+
+
+
+        body: Padding(
         padding: const EdgeInsets.all(16),
         child: GridView.count(
           crossAxisCount: 2,

@@ -24,6 +24,13 @@ class ChatController extends GetxController {
         .snapshots();
   }
 
+  RxBool canSend = true.obs;
+  DateTime? _lastSentTime;
+  bool _hasShownCooldownMsg = false;
+  final int cooldownSeconds = 3;
+
+
+
 
   Future<void> deleteMessage(String docId) async {
     try {
@@ -36,6 +43,20 @@ class ChatController extends GetxController {
       );
     }
   }
+
+
+  bool canSendMessage() {
+    if (_lastSentTime == null) return true;
+
+    final diff = DateTime.now().difference(_lastSentTime!);
+    if (diff.inSeconds >= 3) {
+      _hasShownCooldownMsg = false;
+      return true;
+    }
+    return false;
+  }
+
+
 
 
   void copyMessageId({required BuildContext context, required String messageId,}) {
@@ -52,11 +73,24 @@ class ChatController extends GetxController {
   }
 
 
-    Future<void> sendMessage(BuildContext context) async {
+  Future<void> sendMessage(BuildContext context) async {
     final text = messageController.text.trim();
     if (text.isEmpty) return;
 
+    // 🚫 Spam cooldown
+    if (!canSend.value) {
+      if (!_hasShownCooldownMsg) {
+        _hasShownCooldownMsg = true;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("⏳ Please wait 3 seconds before sending again"),
+          ),
+        );
+      }
+      return;
+    }
 
+    //  Bad word filter
     if (BadWordFilter.containsBadWords(text)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -66,16 +100,27 @@ class ChatController extends GetxController {
       return;
     }
 
-    // ✅ Firestore send (UNCHANGED)
-    _messageRef.add({
+
+    canSend.value = false;
+    _lastSentTime = DateTime.now();
+
+    // ✅ Firestore send
+    await _messageRef.add({
       'text': text,
       'senderId': userId,
       'senderName': username,
       'timestamp': FieldValue.serverTimestamp(),
-      'messageId': messageId
+      'messageId': messageId,
     });
 
     messageController.clear();
+
+    // ⏳ UNLOCK after cooldown
+    Future.delayed(const Duration(seconds: 3), () {
+      canSend.value = true;
+      _hasShownCooldownMsg = false;
+    });
+
 
     Future.delayed(const Duration(milliseconds: 300), () {
       if (scrollController.hasClients) {
@@ -87,6 +132,9 @@ class ChatController extends GetxController {
       }
     });
   }
+
+
+
 
 
 

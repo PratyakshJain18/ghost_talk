@@ -66,8 +66,6 @@ class ChatScreen extends GetView<ChatController> {
 
                     return GestureDetector(
                       onLongPress: () {
-                        if (!isMe) return;
-
                         Get.bottomSheet(
                           SafeArea(
                             child: Container(
@@ -81,29 +79,35 @@ class ChatScreen extends GetView<ChatController> {
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  ListTile(
-                                    leading: const Icon(Icons.delete, color: Colors.red),
-                                    title: const Text(
-                                      "Delete Message",
-                                      style: TextStyle(color: Colors.red),
+                                  // 🔴 DELETE — only for my messages
+                                  if (isMe)
+                                    ListTile(
+                                      leading: const Icon(Icons.delete, color: Colors.red),
+                                      title: const Text(
+                                        "Delete Message",
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                      onTap: () async {
+                                        Get.back();
+                                        await controller.deleteMessage(docId);
+                                      },
                                     ),
-                                    onTap: () async {
-                                      Get.back(); // close sheet
-                                      await controller.deleteMessage(docId);
-                                    },
-                                  ),
+
+                                  // 🔵 COPY — for ALL messages
                                   ListTile(
                                     leading: const Icon(Icons.info, color: Colors.blue),
                                     title: const Text(
                                       "Copy Message Id",
                                       style: TextStyle(color: Colors.blue),
                                     ),
-                                    onTap: ()  {
+                                    onTap: () {
                                       Get.back();
-                                      controller.copyMessageId(context: context, messageId: messageId);
+                                      controller.copyMessageId(
+                                        context: context,
+                                        messageId: data["messageId"], // ✅ FIXED
+                                      );
                                     },
                                   ),
-
                                 ],
                               ),
                             ),
@@ -111,9 +115,7 @@ class ChatScreen extends GetView<ChatController> {
                         );
                       },
                       child: Align(
-                        alignment: isMe
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
+                        alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
                         child: Container(
                           margin: const EdgeInsets.symmetric(vertical: 4),
                           padding: const EdgeInsets.all(10),
@@ -174,12 +176,12 @@ class ChatScreen extends GetView<ChatController> {
                     ),
                   ),
                 ),
-                IconButton(
+                Obx(() => IconButton(
+                  onPressed: controller.canSend.value
+                      ? () => controller.sendMessage(context)
+                      : null,
                   icon: const Icon(Icons.send),
-                  onPressed:(){
-                    controller.sendMessage(context);
-                  }
-                ),
+                ))
               ],
             ),
           ),
