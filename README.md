@@ -1,16 +1,33 @@
-# anonymous_chat
+# 🕵️ Anonymous Chat App (Flutter + Firebase)
 
-A new Flutter project.
+An anonymous real-time chat application built using **Flutter** and **Firebase**, focused on **user safety**, **anti-spam**, and **clean UX**.
 
-## Getting Started
+Users can chat anonymously without login, while the app enforces **message cooldowns**, **bad-word filtering**, and smooth real-time updates.
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## ✨ Features
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- 🔐 **Anonymous Chat** (no login required)
+- 💬 **Real-time messaging** using Firebase Firestore
+- 🚫 **Bad word filter** (client-side moderation)
+- ⏳ **Anti-spam system**
+  - Users can send **only 1 message every 3 seconds**
+  - Send button disables during cooldown
+  - SnackBar warning shown only once
+- 🆔 **Unique Message ID**
+- 📜 **Auto-scroll to latest message**
+- 🧼 Clean and simple UI
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+## 🛠️ Tech Stack
+
+- **Flutter** (UI & state management)
+- **GetX** (state management)
+- **Firebase Firestore** (real-time database)
+- **Firebase Core**
+
+---
+
+
