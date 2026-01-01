@@ -1,0 +1,22 @@
+# Flutter / Dart
+build/
+.dart_tool/
+.pub/
+.packages
+
+# IDE
+.idea/
+.vscode/
+
+# Android
+android/app/google-services.json
+android/.gradle/
+android/local.properties
+
+# iOS
+ios/Runner/GoogleService-Info.plist
+ios/Pods/
+
+# Mac / Windows junk
+.DS_Store
+Thumbs.db
