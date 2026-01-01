@@ -38,11 +38,21 @@ class ChatController extends GetxController {
   }
 
 
+  void copyMessageId({required BuildContext context, required String messageId,}) {
+    Clipboard.setData(
+      ClipboardData(text: messageId),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Message ID copied"),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
 
 
-
-
-  Future<void> sendMessage(BuildContext context) async {
+    Future<void> sendMessage(BuildContext context) async {
     final text = messageController.text.trim();
     if (text.isEmpty) return;
 

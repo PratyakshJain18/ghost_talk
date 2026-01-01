@@ -92,6 +92,17 @@ class ChatScreen extends GetView<ChatController> {
                                       await controller.deleteMessage(docId);
                                     },
                                   ),
+                                  ListTile(
+                                    leading: const Icon(Icons.info, color: Colors.blue),
+                                    title: const Text(
+                                      "Copy Message Id",
+                                      style: TextStyle(color: Colors.blue),
+                                    ),
+                                    onTap: ()  {
+                                      Get.back();
+                                      controller.copyMessageId(context: context, messageId: messageId);
+                                    },
+                                  ),
 
                                 ],
                               ),
@@ -165,9 +176,9 @@ class ChatScreen extends GetView<ChatController> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.send),
-                  onPressed: () {
+                  onPressed:(){
                     controller.sendMessage(context);
-                  },
+                  }
                 ),
               ],
             ),
