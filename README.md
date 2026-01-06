@@ -36,14 +36,41 @@ Built using **GetX architecture**, the project focuses on performance, simplicit
 - 📋 **Copy Message ID** (for all messages)
 - 🗑️ **Delete Message** (only messages sent by you)
 
-### 🚩 Message Reporting & Auto-Moderation
-- 🚩 **Report Message** option available on other users’ messages
-- Each user can **report a message only once**
+### 🚩 Reporting & Moderation System
+
+Ghost Talk uses a **two-level moderation approach** to balance speed, fairness, and anonymity.
+
+---
+
+#### 1️⃣ In-App Message Reporting (Community-Based)
+- Users can **report individual messages directly from the chat**
+- Available via **long-press → Report Message**
+- Each user can **report a specific message only once**
 - Reports are counted anonymously
-- 🚨 **Automatic deletion rule**:
+- 🚨 **Auto-moderation rule**:
   - If a message receives **more than 5 reports**, it is **automatically deleted**
-- No admin intervention required
-- Ensures clean chat through community-driven moderation
+- This handles fast, community-driven moderation without admin involvement
+
+---
+
+#### 2️⃣ Manual Review via Reporting Website (Fallback System)
+- If a reported message **does not reach the auto-delete threshold**
+- Users can escalate the issue using a **separate reporting website**
+- The website is opened **inside the app using WebView**
+- Used for:
+  - Reporting messages that require **manual review**
+  - Serious or sensitive issues
+- Messages reported through the website are **reviewed and removed manually by the team**
+
+---
+
+#### 🧠 Why Two Reporting Methods?
+- Prevents abuse of auto-reporting
+- Avoids accidental deletion due to low report counts
+- Enables human judgment for edge cases
+- Keeps moderation effective without compromising anonymity
+
+---
 
 ### 🕒 Message Metadata
 - Human-readable timestamps
