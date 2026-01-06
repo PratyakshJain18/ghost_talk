@@ -72,6 +72,47 @@ class ChatController extends GetxController {
     );
   }
 
+  Future<bool> reportMessage(String messageId) async {
+    final docRef = _messageRef.doc(messageId);
+    final String currentUserId = userId;
+
+    try {
+      return await FirebaseFirestore.instance
+          .runTransaction<bool>((transaction) async {
+        final snapshot = await transaction.get(docRef);
+        if (!snapshot.exists) return false;
+
+        final data = snapshot.data() as Map<String, dynamic>;
+        final List reportedBy = List.from(data['reportedBy'] ?? []);
+
+        // 🚫 Already reported
+        if (reportedBy.contains(currentUserId)) {
+          return false; // ❌ no new report
+        }
+
+        // ✅ New report
+        reportedBy.add(currentUserId);
+        final int newCount = (data['reportCount'] ?? 0) + 1;
+
+        if (newCount >= 5) {
+          transaction.delete(docRef);
+        } else {
+          transaction.update(docRef, {
+            'reportCount': newCount,
+            'reportedBy': reportedBy,
+          });
+        }
+
+        return true; // ✅ successfully reported
+      });
+    } catch (e) {
+      debugPrint("❌ Report error: $e");
+      return false;
+    }
+  }
+
+
+
 
   Future<void> sendMessage(BuildContext context) async {
     final text = messageController.text.trim();
@@ -100,17 +141,17 @@ class ChatController extends GetxController {
       return;
     }
 
-
     canSend.value = false;
     _lastSentTime = DateTime.now();
 
-    // ✅ Firestore send
     await _messageRef.add({
       'text': text,
       'senderId': userId,
       'senderName': username,
       'timestamp': FieldValue.serverTimestamp(),
       'messageId': messageId,
+      'reportCount':0,
+      "reportedBy": []
     });
 
     messageController.clear();

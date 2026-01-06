@@ -5,11 +5,11 @@ import 'package:intl/intl.dart';
 import '../Controller/chat_controller.dart';
 import '../../utils/user_identity.dart';
 class ChatScreen extends GetView<ChatController> {
-  ChatScreen({super.key }) ;
+  const ChatScreen({super.key }) ;
 
   String getTime(Timestamp? timestamp) {
     if (timestamp == null) return '';
-    return DateFormat('hh:mm a').format(timestamp.toDate());
+    return DateFormat('dd MMM, hh:mm a').format(timestamp.toDate());
   }
 
   @override
@@ -50,9 +50,9 @@ class ChatScreen extends GetView<ChatController> {
                 }
 
                 final messages = snapshot.data!.docs;
-
                 return ListView.builder(
                   controller: controller.scrollController,
+
                   padding: const EdgeInsets.all(12),
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
@@ -61,7 +61,8 @@ class ChatScreen extends GetView<ChatController> {
 
                     final isMe = data['senderId'] == userId;
                     final time = getTime(data['timestamp']);
-
+                    final doc = snapshot.data!.docs[index];
+                    final String messageId = doc.id;
                     final docId = messages[index].id;
 
                     return GestureDetector(
@@ -79,7 +80,7 @@ class ChatScreen extends GetView<ChatController> {
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  // 🔴 DELETE — only for my messages
+
                                   if (isMe)
                                     ListTile(
                                       leading: const Icon(Icons.delete, color: Colors.red),
@@ -93,7 +94,7 @@ class ChatScreen extends GetView<ChatController> {
                                       },
                                     ),
 
-                                  // 🔵 COPY — for ALL messages
+
                                   ListTile(
                                     leading: const Icon(Icons.info, color: Colors.blue),
                                     title: const Text(
@@ -108,6 +109,38 @@ class ChatScreen extends GetView<ChatController> {
                                       );
                                     },
                                   ),
+                                  if (!isMe)
+                                    ListTile(
+                                      leading: const Icon(Icons.flag, color: Colors.red),
+                                      title: const Text("Report Message"),
+                                      onTap: () async {
+                                        Get.back(); // close bottom sheet
+
+                                        final bool didReport =
+                                        await controller.reportMessage(messageId);
+
+                                        if (didReport) {
+                                          Get.snackbar(
+                                            "Reported",
+                                            "Thank you for reporting inappropriate content.",
+                                            snackPosition: SnackPosition.BOTTOM,
+                                            icon: const Icon(Icons.flag, color: Colors.red),
+                                            margin: const EdgeInsets.all(12),
+                                            borderRadius: 12,
+                                          );
+                                        } else {
+                                          Get.snackbar(
+                                            "Already Reported",
+                                            "You have already reported this message.",
+                                            snackPosition: SnackPosition.BOTTOM,
+                                            icon: const Icon(Icons.info, color: Colors.orange),
+                                            margin: const EdgeInsets.all(12),
+                                            borderRadius: 12,
+                                          );
+                                        }
+                                      },
+
+                                    ),
                                 ],
                               ),
                             ),
